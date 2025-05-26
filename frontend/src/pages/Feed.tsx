@@ -184,7 +184,7 @@ const Feed = () => {
           {posts.map((post) => (
             <div
               key={post.id}
-              className="text-white py-4 px-2 border-b border-gray-800 hover:bg-[#16181c] transition"
+              className="text-white py-4 px-2 border-b border-gray-800 transition"
             >
               <div className="flex justify-between text-sm text-gray-400 mb-1">
                 <div
