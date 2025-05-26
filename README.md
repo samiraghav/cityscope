@@ -4,6 +4,10 @@
 
 This app mimics a Twitter-like UI with support for posting updates, images, replies, likes, and profile browsing, all filtered by location and type.
 
+Build a location-based community posting platform where users can post updates,
+recommendations, and local insights. Think of it as a mini-Twitter for neighborhoods or local
+groups, where users can interact through posts, replies, and reactions.
+
 ---
 
 ## Features
