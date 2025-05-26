@@ -9,6 +9,8 @@ interface DecodedToken {
   userId: string;
 }
 
+const MAX_CHARS = 280;
+
 const CreatePost = () => {
   const [formData, setFormData] = useState({ text: '', type: '', location: '' });
   const [image, setImage] = useState<File | null>(null);
@@ -36,7 +38,11 @@ const CreatePost = () => {
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === 'text' && value.length > MAX_CHARS) return;
+
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,7 +82,7 @@ const CreatePost = () => {
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-4 overflow-hidden">
       <form
         onSubmit={handleSubmit}
-        className="bg-[#111] p-6 sm:p-8 rounded-2xl shadow-md w-full max-w-lg space-y-5 border border-gray-800 mb-16"
+        className="bg-[#111] p-6 sm:p-8 rounded-2xl shadow-md w-full max-w-3xl space-y-5 border border-gray-800 mb-16"
         encType="multipart/form-data"
       >
         <div className="flex items-center gap-3">
@@ -90,14 +96,20 @@ const CreatePost = () => {
 
         <h2 className="text-xl font-bold text-gray-200">What's happening?</h2>
 
-        <textarea
-          name="text"
-          placeholder="Share your thoughts..."
-          value={formData.text}
-          onChange={handleChange}
-          className="w-full bg-gray-900 border border-gray-700 rounded-md p-3 text-white focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none h-24"
-          required
-        />
+        <div>
+          <textarea
+            name="text"
+            placeholder="Share your thoughts..."
+            value={formData.text}
+            onChange={handleChange}
+            className="w-full bg-gray-900 border border-gray-700 rounded-md p-3 text-white focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none h-24"
+            required
+            maxLength={MAX_CHARS}
+          />
+          <div className="text-right text-sm text-gray-400 mt-1">
+            {formData.text.length}/{MAX_CHARS}
+          </div>
+        </div>
 
         <div className="flex flex-col sm:flex-row gap-4">
           <select
@@ -107,11 +119,11 @@ const CreatePost = () => {
             className="bg-gray-900 border border-gray-700 rounded-md p-3 text-white focus:outline-none focus:ring-1 focus:ring-blue-500 w-full"
             required
           >
-            <option value="">Select Type</option>
-            <option value="recommend">Recommend</option>
-            <option value="help">Help</option>
-            <option value="update">Update</option>
-            <option value="event">Event</option>
+            <option value="">Select Post Type</option>
+            <option value="recommend">Recommend a place</option>
+            <option value="help">Ask for help</option>
+            <option value="update">Share a local update</option>
+            <option value="event">Event announcement</option>
           </select>
 
           <input
