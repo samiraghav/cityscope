@@ -13,7 +13,7 @@ const prisma = new PrismaClient();
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://cityscope-fawn.vercel.app/'
+  'https://cityscope-fawn.vercel.app'
 ];
 
 app.use(cors({
