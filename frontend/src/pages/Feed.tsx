@@ -189,7 +189,7 @@ const Feed = () => {
               <p className="text-[15px] text-gray-100 mb-2 whitespace-pre-line">{post.text}</p>
 
               {post.imageUrl && (
-                <img src={post.imageUrl} className="rounded-lg overflow-hidden mb-3 border border-gray-700 w-full max-h-[400px] object-cover" />
+                <img src={post.imageUrl} className="rounded-lg overflow-hidden mb-3 border border-gray-700 w-full max-h-[400px] object-contain" />
               )}
 
               <div className="flex items-center justify-between text-xs text-gray-400 mb-2">

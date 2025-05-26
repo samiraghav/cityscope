@@ -1,6 +1,6 @@
 import { FaUserCircle } from 'react-icons/fa';
 import { useState } from 'react';
-import { createReply, reactToPost } from '../services/api';
+import { createReply } from '../services/api';
 import toast from 'react-hot-toast';
 
 const formatTimeAgo = (dateStr: string) => {
@@ -42,38 +42,6 @@ export default function PostModal({ post, onClose }: { post: any; onClose: () =>
       toast.error('Failed to reply');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleReaction = async (reaction: 'like' | 'dislike') => {
-    const token = localStorage.getItem('token');
-    if (!token) return toast.error('Please log in');
-
-    if (localPost.userReaction === reaction) {
-      toast.error(`You already ${reaction}d this post`);
-      return;
-    }
-
-    try {
-      await reactToPost(token, localPost.id, reaction);
-      toast.success(`Post ${reaction}d`);
-
-      const updated = {
-        ...localPost,
-        likes:
-          reaction === 'like'
-            ? localPost.likes + 1 - (localPost.userReaction === 'dislike' ? 1 : 0)
-            : localPost.likes - (localPost.userReaction === 'like' ? 1 : 0),
-        dislikes:
-          reaction === 'dislike'
-            ? localPost.dislikes + 1 - (localPost.userReaction === 'like' ? 1 : 0)
-            : localPost.dislikes - (localPost.userReaction === 'dislike' ? 1 : 0),
-        userReaction: reaction,
-      };
-
-      setLocalPost(updated);
-    } catch {
-      toast.error('Reaction failed');
     }
   };
 

@@ -48,7 +48,7 @@ const UserPublicProfile = () => {
                 <img
                   src={post.imageUrl}
                   alt="Post"
-                  className="w-full max-h-[200px] object-cover rounded mb-2"
+                  className="w-full max-h-[200px] object-contain rounded mb-2"
                 />
               )}
               <div className="text-xs text-gray-400 flex justify-between mb-2">
