@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { getPosts, reactToPost, createReply } from '../services/api';
 import toast from 'react-hot-toast';
-import { FaThumbsUp, FaThumbsDown, FaUserCircle } from 'react-icons/fa';
+import { FaThumbsUp, FaThumbsDown, FaUserCircle, FaSpinner, FaGhost } from 'react-icons/fa';
 import { LuMessageCircle } from "react-icons/lu";
 import { useNavigate } from 'react-router-dom';
 
@@ -48,7 +48,7 @@ const Feed = () => {
   const [locationFilter, setLocationFilter] = useState('');
   const [activeReply, setActiveReply] = useState<string | null>(null);
   const [replyText, setReplyText] = useState('');
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const fetchPosts = useCallback(async () => {
     setLoading(true);
@@ -166,115 +166,124 @@ const Feed = () => {
           />
         </div>
 
-        {loading && <p className="text-gray-400 mb-4">Loading posts...</p>}
+        {loading && (
+          <div className="flex flex-col items-center justify-center mt-32 text-gray-400 animate-pulse">
+            <FaSpinner className="animate-spin text-3xl mb-4" />
+            <p>Loading posts... Our backend is warming up on Render, please wait ⏳</p>
+          </div>
+        )}
+
         {!loading && posts.length === 0 && (
-          <p className="text-gray-500">No posts found.</p>
+          <div className="flex flex-col items-center justify-center mt-32 text-gray-500">
+            <FaGhost className="text-4xl mb-4" />
+            <p>No posts found. Try changing the filters or location.</p>
+          </div>
         )}
 
         <div className="space-y-6 mb-16">
           {posts.map((post) => (
             <div
-                key={post.id}
-                className="text-white py-4 px-2 border-b border-gray-800 hover:bg-[#16181c] transition"
+              key={post.id}
+              className="text-white py-4 px-2 border-b border-gray-800 hover:bg-[#16181c] transition"
             >
-                <div className="flex justify-between text-sm text-gray-400 mb-1">
+              <div className="flex justify-between text-sm text-gray-400 mb-1">
                 <div
-                    className="flex items-center gap-2 cursor-pointer hover:underline"
-                    onClick={() => navigate(`/profile/${post.user.id}`)}
+                  className="flex items-center gap-2 cursor-pointer hover:underline"
+                  onClick={() => navigate(`/profile/${post.user.id}`)}
                 >
-                    {post.user.imageUrl ? (
+                  {post.user.imageUrl ? (
                     <img
-                        src={post.user.imageUrl}
-                        alt="Profile"
-                        className="w-8 h-8 rounded-full object-cover"
+                      src={post.user.imageUrl}
+                      alt="Profile"
+                      className="w-8 h-8 rounded-full object-cover"
                     />
-                    ) : (
+                  ) : (
                     <FaUserCircle className="w-8 h-8 text-gray-500" />
-                    )}
-                    <span className="font-semibold text-white">@{post.user.username}</span>
+                  )}
+                  <span className="font-semibold text-white">@{post.user.username}</span>
                 </div>
                 <span className="text-xs">{formatTimeAgo(post.createdAt)}</span>
-                </div>
+              </div>
 
-                <p className="text-[15px] text-gray-100 mb-2 whitespace-pre-line">{post.text}</p>
+              <p className="text-[15px] text-gray-100 mb-2 whitespace-pre-line">{post.text}</p>
 
-                {post.imageUrl && (
+              {post.imageUrl && (
                 <div className="rounded-lg overflow-hidden mb-3 border border-gray-700">
-                    <img
+                  <img
                     src={post.imageUrl}
                     alt="Post"
                     className="w-full max-h-[400px] object-cover"
-                    />
+                  />
                 </div>
-                )}
+              )}
 
-                <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
+              <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
                 <span>📍 {post.location}</span>
                 <span
-                    className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  className={`px-2 py-1 rounded-full text-xs font-medium ${
                     badgeColors[post.type as keyof typeof badgeColors] || 'bg-gray-700'
-                    }`}
+                  }`}
                 >
-                    {post.type}
+                  {post.type}
                 </span>
-                </div>
+              </div>
 
-                <div className="flex justify-start gap-6 text-sm text-gray-400 mt-2">
+              <div className="flex justify-start gap-6 text-sm text-gray-400 mt-2">
                 <button
-                    onClick={() => handleReaction(post.id, 'like')}
-                    className="hover:text-blue-400 flex items-center gap-1"
+                  onClick={() => handleReaction(post.id, 'like')}
+                  className="hover:text-blue-400 flex items-center gap-1"
                 >
-                    <FaThumbsUp size={15} /> {post.likes}
+                  <FaThumbsUp size={15} /> {post.likes}
                 </button>
                 <button
-                    onClick={() => handleReaction(post.id, 'dislike')}
-                    className="hover:text-red-400 flex items-center gap-1"
+                  onClick={() => handleReaction(post.id, 'dislike')}
+                  className="hover:text-red-400 flex items-center gap-1"
                 >
-                    <FaThumbsDown size={15} /> {post.dislikes}
+                  <FaThumbsDown size={15} /> {post.dislikes}
                 </button>
                 <button
-                    onClick={() => setActiveReply(post.id)}
-                    className="hover:text-gray-200 flex items-center gap-1"
+                  onClick={() => setActiveReply(post.id)}
+                  className="hover:text-gray-200 flex items-center gap-1"
                 >
-                    <LuMessageCircle size={15} /> {post.replies.length}
+                  <LuMessageCircle size={15} /> {post.replies.length}
                 </button>
-                </div>
+              </div>
 
-                {activeReply === post.id && (
+              {activeReply === post.id && (
                 <div className="mt-3 relative flex items-center">
-                    <input
+                  <input
                     type="text"
                     placeholder="Write a reply..."
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
                     className="w-full bg-gray-800 border border-gray-700 p-2 pr-24 rounded-md text-sm text-white"
-                    />
-                    <button
+                  />
+                  <button
                     onClick={() => handleReply(post.id)}
                     disabled={replyLoading}
                     className={`absolute right-2 px-3 py-1 bg-blue-600 text-white rounded-md text-sm ${
-                        replyLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
+                      replyLoading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
                     }`}
-                    >
+                  >
                     {replyLoading ? 'Posting...' : 'Reply'}
-                    </button>
+                  </button>
                 </div>
-                )}
+              )}
 
-                {post.replies?.length > 0 && (
+              {post.replies?.length > 0 && (
                 <div className="mt-3 space-y-2">
-                    {post.replies.map((reply) => (
+                  {post.replies.map((reply) => (
                     <div
-                        key={reply.id}
-                        className="text-sm text-gray-300 bg-gray-900 rounded p-2"
+                      key={reply.id}
+                      className="text-sm text-gray-300 bg-gray-900 rounded p-2"
                     >
-                        <span className="font-semibold">@{reply.user.username}</span>: {reply.text}
+                      <span className="font-semibold">@{reply.user.username}</span>: {reply.text}
                     </div>
-                    ))}
+                  ))}
                 </div>
-                )}
+              )}
             </div>
-            ))}
+          ))}
         </div>
       </div>
     </div>
