@@ -26,7 +26,6 @@ const badgeColors = {
 export default function PostModal({ post, onClose }: { post: any; onClose: () => void }) {
   const [replyText, setReplyText] = useState('');
   const [loading, setLoading] = useState(false);
-  const [localPost, setLocalPost] = useState(post);
 
   const handleReply = async () => {
     const token = localStorage.getItem('token');
@@ -34,7 +33,7 @@ export default function PostModal({ post, onClose }: { post: any; onClose: () =>
 
     try {
       setLoading(true);
-      await createReply(token, localPost.id, replyText);
+      await createReply(token, post.id, replyText);
       toast.success('Reply posted!');
       setReplyText('');
       window.location.reload();
@@ -47,39 +46,39 @@ export default function PostModal({ post, onClose }: { post: any; onClose: () =>
 
   return (
     <div className="fixed inset-0 z-50 bg-black bg-opacity-70 flex items-start md:items-center justify-center p-2 md:p-6 overflow-y-auto">
-      <div className="w-full max-w-xl rounded-lg p-4 md:p-6 relative">
+      <div className="w-full max-w-xl rounded-lg p-4 md:p-6 relative bg-[#111]">
         <button onClick={onClose} className="absolute top-2 right-3 text-gray-500 text-lg">✕</button>
 
         <div className="pb-4 border-b border-gray-700">
           <div className="flex gap-2 items-center text-sm mb-1">
-            {localPost.user.imageUrl ? (
-              <img src={localPost.user.imageUrl} className="w-10 h-10 rounded-full object-cover" />
+            {post.user.imageUrl ? (
+              <img src={post.user.imageUrl} className="w-10 h-10 rounded-full object-cover" />
             ) : (
               <FaUserCircle className="w-10 h-10 text-gray-500" />
             )}
 
-            <div className="font-semibold text-white">@{localPost.user.username}</div>
-            <div className="text-xs text-gray-500">{formatTimeAgo(localPost.createdAt)}</div>
+            <div className="font-semibold text-white">@{post.user.username}</div>
+            <div className="text-xs text-gray-500">{formatTimeAgo(post.createdAt)}</div>
           </div>
 
-          <p className="text-gray-200 text-[15px] whitespace-pre-line my-2">{localPost.text}</p>
+          <p className="text-gray-200 text-[15px] whitespace-pre-line my-2">{post.text}</p>
 
-          {localPost.imageUrl && (
+          {post.imageUrl && (
             <img
-              src={localPost.imageUrl}
+              src={post.imageUrl}
               className="w-full max-h-[300px] object-cover rounded mb-3 border border-gray-700"
               alt="Post"
             />
           )}
 
           <div className="flex items-center justify-between text-xs text-gray-400 mb-2">
-            <span>📍 {localPost.location}</span>
+            <span>📍 {post.location}</span>
             <span
               className={`px-2 py-1 rounded-full text-xs font-medium ${
-                badgeColors[localPost.type as keyof typeof badgeColors]
+                badgeColors[post.type as keyof typeof badgeColors]
               }`}
             >
-              {localPost.type}
+              {post.type}
             </span>
           </div>
         </div>
@@ -101,11 +100,11 @@ export default function PostModal({ post, onClose }: { post: any; onClose: () =>
           </button>
         </div>
 
-        {localPost.replies.length > 0 && (
+        {post.replies.length > 0 && (
           <div className="mt-6">
             <p className="text-sm font-semibold text-gray-300 mb-2">Replies</p>
             <div className="space-y-3">
-              {localPost.replies.map((r: any) => (
+              {post.replies.map((r: any) => (
                 <div key={r.id} className="text-sm text-gray-300 border-t border-gray-800 pt-2">
                   <span className="font-semibold">@{r.user.username}</span>: {r.text}
                 </div>
