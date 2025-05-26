@@ -8,6 +8,7 @@ import Navbar from './pages/NavBar';
 import UserProfile from './pages/UserProfile';
 import NotFound from "./pages/NotFound";
 import UserProfilePage from "./pages/UserProfilePage";
+import PrivateRoute from './pages/PrivateRoute';
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
@@ -27,10 +28,17 @@ function App() {
   return (
       <AppLayout>
         <Routes>
+          <Route
+            path="/feed"
+            element={
+              <PrivateRoute>
+                <Feed />
+              </PrivateRoute>
+            }
+          />
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/feed" element={<Feed />} />
           <Route path="/create" element={<CreatePost />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="*" element={<NotFound />} />
