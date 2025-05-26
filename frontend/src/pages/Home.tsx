@@ -1,13 +1,15 @@
 import { useEffect, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Megaphone, Users, MapPinned } from 'lucide-react';
+import { FiMapPin, FiUsers, FiVolume2 } from 'react-icons/fi';
 
 const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
+    if (!token) {
+      navigate('/signin');
+    } else {
       navigate('/feed');
     }
   }, [navigate]);
@@ -42,17 +44,17 @@ const Home = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-left mt-4">
           <FeatureCard
-            icon={<MapPinned size={28} />}
+            icon={<FiMapPin size={28} />}
             title="Stay Informed"
             text="Get real-time updates from people near you."
           />
           <FeatureCard
-            icon={<Megaphone size={28} />}
+            icon={<FiVolume2 size={28} />}
             title="Speak Up"
             text="Post local news, tips, or events in seconds."
           />
           <FeatureCard
-            icon={<Users size={28} />}
+            icon={<FiUsers size={28} />}
             title="Engage"
             text="Reply, react and connect with your neighborhood."
           />
